@@ -46,7 +46,6 @@ public class DefaultCarService implements CarService
     {
         CarDO car;
         try {
-            carDO.setManufacturer(checkManufacturer(carDO));
             car = carRepository.save(carDO);
         }catch (DataIntegrityViolationException dataIntegrityViolationException){
             LOG.warn("Exception occured while creating new car", dataIntegrityViolationException);
