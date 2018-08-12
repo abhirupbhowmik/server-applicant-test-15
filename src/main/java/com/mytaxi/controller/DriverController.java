@@ -1,13 +1,16 @@
 package com.mytaxi.controller;
 
 import com.mytaxi.controller.mapper.DriverMapper;
+import com.mytaxi.datatransferobject.CarDTO;
 import com.mytaxi.datatransferobject.DriverDTO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.OnlineStatus;
+import com.mytaxi.exception.CarAlreadyInUseException;
 import com.mytaxi.exception.ConstraintsViolationException;
 import com.mytaxi.exception.EntityNotFoundException;
 import com.mytaxi.service.driver.DriverService;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,15 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1/drivers")
 public class DriverController
 {
-
-    private final DriverService driverService;
-
-
     @Autowired
-    public DriverController(final DriverService driverService)
-    {
-        this.driverService = driverService;
-    }
+    private DriverService driverService;
 
 
     @GetMapping("/{driverId}")
@@ -79,4 +75,40 @@ public class DriverController
     {
         return DriverMapper.makeDriverDTOList(driverService.find(onlineStatus));
     }
+
+
+    @PostMapping("/select")
+    public DriverDTO selectCarByDriver(@RequestParam long driverId, @RequestParam long carId) throws EntityNotFoundException,
+            CarAlreadyInUseException
+    {
+        return driverService.selectCarByDriver(driverId, carId);
+    }
+
+
+    @DeleteMapping("/deselect")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeCarByDriver(@RequestParam long driverId, @RequestParam long carId) throws EntityNotFoundException,
+            CarAlreadyInUseException
+    {
+        driverService.removeCarByDriver(driverId, carId);
+    }
+
+
+    @GetMapping("/car")
+    public List<DriverDTO> findDriverByCarAttributes(@Valid @RequestBody CarDTO carDTO)
+    {
+        return driverService.findDriverByCarAttributes(carDTO);
+    }
+
+  /*  @GetMapping("/car")
+    public List<DriverDTO> findDriverByCarAttributes(@RequestParam Map<String, String> params)
+    {
+        return driverService.findDriverByCarAttributes(getCarDataRequest(params));
+    }
+
+
+    private CarDTO getCarDataRequest(Map<String, String> params)
+    {
+        return
+    }*/
 }

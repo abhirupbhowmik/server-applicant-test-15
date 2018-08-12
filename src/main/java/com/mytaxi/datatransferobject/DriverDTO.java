@@ -20,18 +20,21 @@ public class DriverDTO
 
     private GeoCoordinate coordinate;
 
+    @JsonProperty("car")
+    private CarDTO driverCarDTO;
 
     private DriverDTO()
     {
     }
 
 
-    private DriverDTO(Long id, String username, String password, GeoCoordinate coordinate)
+    private DriverDTO(Long id, String username, String password, GeoCoordinate coordinate, CarDTO driverCarDTO)
     {
         this.id = id;
         this.username = username;
         this.password = password;
         this.coordinate = coordinate;
+        this.driverCarDTO = driverCarDTO;
     }
 
 
@@ -65,12 +68,21 @@ public class DriverDTO
         return coordinate;
     }
 
+    public CarDTO getDriverCarDTO() {
+        return driverCarDTO;
+    }
+
+    public void setDriverCarDTO(CarDTO driverCarDTO) {
+        this.driverCarDTO = driverCarDTO;
+    }
+
     public static class DriverDTOBuilder
     {
         private Long id;
         private String username;
         private String password;
         private GeoCoordinate coordinate;
+        private CarDTO driverCarDTO;
 
 
         public DriverDTOBuilder setId(Long id)
@@ -101,9 +113,14 @@ public class DriverDTO
         }
 
 
+        public void setDriverCarDTO(CarDTO driverCarDTO) {
+            this.driverCarDTO = driverCarDTO;
+        }
+
+
         public DriverDTO createDriverDTO()
         {
-            return new DriverDTO(id, username, password, coordinate);
+            return new DriverDTO(id, username, password, coordinate, driverCarDTO);
         }
 
     }

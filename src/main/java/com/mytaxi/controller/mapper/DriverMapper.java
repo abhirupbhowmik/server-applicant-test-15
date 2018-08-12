@@ -1,6 +1,8 @@
 package com.mytaxi.controller.mapper;
 
+import com.mytaxi.datatransferobject.CarDTO;
 import com.mytaxi.datatransferobject.DriverDTO;
+import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.GeoCoordinate;
 import java.util.Collection;
@@ -37,5 +39,15 @@ public class DriverMapper
         return drivers.stream()
             .map(DriverMapper::makeDriverDTO)
             .collect(Collectors.toList());
+    }
+
+    public static DriverDTO makeDriverCarDTO(Object[] object)
+    {
+        DriverDO driverDO = (DriverDO) object[0];
+        CarDO carDO =  (CarDO) object[1] ;
+        CarDTO carDTO = CarMapper.makeCarDTO(carDO);
+        DriverDTO driverCarDTO = makeDriverDTO(driverDO);
+        driverCarDTO.setDriverCarDTO(carDTO);
+        return driverCarDTO;
     }
 }
