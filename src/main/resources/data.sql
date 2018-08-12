@@ -40,3 +40,15 @@ values
  (8,
  'aced0005737200226f72672e737072696e676672616d65776f726b2e646174612e67656f2e506f696e7431b9e90ef11a4006020002440001784400017978704023000000000000404bfa1cac083127', now(), now(), false, 'ONLINE',
 'driver08pw', 'driver08');
+
+INSERT INTO manufacturer(id, date_created, name, country, deleted) VALUES(1,  now(), 'BMW', 'USA', false);
+INSERT INTO manufacturer(id, date_created, name, country, deleted) VALUES(2,  now(), 'Ford', 'Germany', false);
+
+INSERT INTO car(id, total_seat, car_type, purchase_date, license_no, rating, manufacturer, deleted)
+VALUES(1, 4, 'Petrol', now(),  'PM-1234', 4.5, 1, false);
+
+INSERT INTO car(id, total_seat, car_type, purchase_date, license_no, rating, manufacturer, deleted)
+VALUES(2, 5, 'Disel', now(),  'DM-4567', 5, 2, false);
+
+INSERT INTO car(id, total_seat, car_type, purchase_date, license_no, rating, manufacturer, deleted)
+VALUES(3, 6, 'Electric', now(),  'EM-6789', 6, 1, false);
