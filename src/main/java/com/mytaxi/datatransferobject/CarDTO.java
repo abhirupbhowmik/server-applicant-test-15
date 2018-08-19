@@ -1,35 +1,32 @@
 package com.mytaxi.datatransferobject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mytaxi.domainobject.ManufacturerDO;
-
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import com.mytaxi.domainvalue.EngineType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CarDTO {
-    @JsonIgnore
     private Long id;
 
     @NotNull(message = "Seat numbers can not be null!")
-    private Integer totalSeat;
+    private String totalSeat;
 
-    private String carType;
+    private EngineType carType;
 
-    private Float rating;
+    private String rating;
 
     @NotNull(message = "Car numbers can not be null!")
     private String licenseNo;
 
-    private ManufacturerDO manufacturer;
-
-    private CarDTO() {
+    private String manufacturer;
+    
+    
+	public CarDTO() {
     }
 
-    public CarDTO(Long id, Integer totalSeat, String carType, Float rating, String licenseNo, ManufacturerDO manufacturer) {
+    public CarDTO(Long id, String totalSeat, EngineType carType, String rating, String licenseNo, String manufacturer) {
         this.id = id;
         this.totalSeat = totalSeat;
         this.carType = carType;
@@ -47,13 +44,13 @@ public class CarDTO {
         return id;
     }
 
-    public Integer getTotalSeat() {
+    public String getTotalSeat() {
         return totalSeat;
     }
 
-    public String getCarType() { return carType; }
+    public EngineType getCarType() { return carType; }
 
-    public Float getRating() {
+    public String getRating() {
         return rating;
     }
 
@@ -61,34 +58,35 @@ public class CarDTO {
         return licenseNo;
     }
 
-    public ManufacturerDO getManufacturer() {
+    public String getManufacturer() {
         return manufacturer;
     }
 
     public static class CarDTOBuilder {
         private Long id;
-        private Integer totalSeat;
-        private String carType;
-        private Float rating;
+        private String totalSeat;
+        private EngineType carType;
+        private String rating;
         private String licenseNo;
-        private ManufacturerDO manufacturer;
+        private String manufacturer;
+        //private DriverDTO driverDetails;
 
         public CarDTOBuilder setId(Long id) {
             this.id = id;
             return this;
         }
 
-        public CarDTOBuilder setTotalSeat(Integer totalSeat) {
+        public CarDTOBuilder setTotalSeat(String totalSeat) {
             this.totalSeat = totalSeat;
             return this;
         }
 
-        public CarDTOBuilder setCarType(String carType) {
+        public CarDTOBuilder setCarType(EngineType carType) {
             this.carType = carType;
             return this;
         }
 
-        public CarDTOBuilder setRating(Float rating) {
+        public CarDTOBuilder setRating(String rating) {
             this.rating = rating;
             return this;
         }
@@ -98,10 +96,17 @@ public class CarDTO {
             return this;
         }
 
-        public CarDTOBuilder setManufacturer(ManufacturerDO manufacturer) {
+        public CarDTOBuilder setManufacturer(String manufacturer) {
             this.manufacturer = manufacturer;
             return this;
         }
+        
+        /*public CarDTOBuilder setDriverDetails(DriverDTO driverDetails) {
+            this.driverDetails = driverDetails;
+            return this;
+        }*/
+        
+        
 
         public CarDTO createCarDTO() {
             return new CarDTO(id, totalSeat, carType, rating, licenseNo, manufacturer);

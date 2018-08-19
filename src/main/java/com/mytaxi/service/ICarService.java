@@ -1,13 +1,14 @@
-package com.mytaxi.service.car;
-
-import com.mytaxi.domainobject.CarDO;
-import com.mytaxi.exception.ConstraintsViolationException;
-import com.mytaxi.exception.EntityNotFoundException;
+package com.mytaxi.service;
 
 import java.util.List;
 
+import com.mytaxi.domainobject.CarDO;
+import com.mytaxi.exception.ConstraintsViolationException;
+import com.mytaxi.exception.DriverMappedToACarException;
+import com.mytaxi.exception.EntityNotFoundException;
 
-public interface CarService
+
+public interface ICarService
 {
 
     CarDO findCarById(final Long carId) throws EntityNotFoundException;
@@ -16,9 +17,9 @@ public interface CarService
 
     CarDO create(final CarDO car) throws EntityNotFoundException, ConstraintsViolationException;
 
-    void update(final CarDO car) throws EntityNotFoundException;
+    CarDO update(final CarDO car) throws EntityNotFoundException;
 
-    void delete(final Long carId) throws EntityNotFoundException;
+    void delete(final Long carId) throws EntityNotFoundException,DriverMappedToACarException;
 
 
 }

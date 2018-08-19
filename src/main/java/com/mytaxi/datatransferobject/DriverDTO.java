@@ -1,15 +1,15 @@
 package com.mytaxi.datatransferobject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mytaxi.domainvalue.GeoCoordinate;
-import javax.validation.constraints.NotNull;
+import com.mytaxi.domainvalue.OnlineStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DriverDTO
 {
-    @JsonIgnore
     private Long id;
 
     @NotNull(message = "Username can not be null!")
@@ -20,21 +20,26 @@ public class DriverDTO
 
     private GeoCoordinate coordinate;
 
-    @JsonProperty("car")
-    private CarDTO driverCarDTO;
+    
+    private OnlineStatus status;
 
-    private DriverDTO()
+    public OnlineStatus getStatus() {
+		return status;
+	}
+
+
+	private DriverDTO()
     {
     }
 
 
-    private DriverDTO(Long id, String username, String password, GeoCoordinate coordinate, CarDTO driverCarDTO)
+    private DriverDTO(Long id, String username, String password, GeoCoordinate coordinate,OnlineStatus status)
     {
         this.id = id;
         this.username = username;
         this.password = password;
         this.coordinate = coordinate;
-        this.driverCarDTO = driverCarDTO;
+        this.status = status;
     }
 
 
@@ -68,13 +73,7 @@ public class DriverDTO
         return coordinate;
     }
 
-    public CarDTO getDriverCarDTO() {
-        return driverCarDTO;
-    }
-
-    public void setDriverCarDTO(CarDTO driverCarDTO) {
-        this.driverCarDTO = driverCarDTO;
-    }
+   
 
     public static class DriverDTOBuilder
     {
@@ -82,8 +81,7 @@ public class DriverDTO
         private String username;
         private String password;
         private GeoCoordinate coordinate;
-        private CarDTO driverCarDTO;
-
+        private OnlineStatus status;
 
         public DriverDTOBuilder setId(Long id)
         {
@@ -112,15 +110,19 @@ public class DriverDTO
             return this;
         }
 
-
-        public void setDriverCarDTO(CarDTO driverCarDTO) {
-            this.driverCarDTO = driverCarDTO;
+        public DriverDTOBuilder setStatus(OnlineStatus status) {
+        	this.status = status;
+        	return this;
         }
+
+      
+        
+       
 
 
         public DriverDTO createDriverDTO()
         {
-            return new DriverDTO(id, username, password, coordinate, driverCarDTO);
+            return new DriverDTO(id, username, password, coordinate,status);
         }
 
     }
