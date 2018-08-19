@@ -1,17 +1,9 @@
 package com.mytaxi.controller;
 
-import com.mytaxi.controller.mapper.DriverMapper;
-import com.mytaxi.datatransferobject.CarDTO;
-import com.mytaxi.datatransferobject.DriverDTO;
-import com.mytaxi.domainobject.DriverDO;
-import com.mytaxi.domainvalue.OnlineStatus;
-import com.mytaxi.exception.CarAlreadyInUseException;
-import com.mytaxi.exception.ConstraintsViolationException;
-import com.mytaxi.exception.EntityNotFoundException;
-import com.mytaxi.service.driver.DriverService;
 import java.util.List;
-import java.util.Map;
+
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +17,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mytaxi.controller.mapper.DriverMapper;
+import com.mytaxi.datatransferobject.CarDriverDTO;
+import com.mytaxi.datatransferobject.DriverDTO;
+import com.mytaxi.domainobject.DriverDO;
+import com.mytaxi.domainvalue.OnlineStatus;
+import com.mytaxi.domainvalue.SearchParameters;
+import com.mytaxi.domainvalue.SearchType;
+import com.mytaxi.exception.CarAlreadyInUseException;
+import com.mytaxi.exception.ConstraintsViolationException;
+import com.mytaxi.exception.DriverMappedToACarException;
+import com.mytaxi.exception.EntityNotFoundException;
+import com.mytaxi.exception.InvalidSearchCriteria;
+import com.mytaxi.exception.NoResultFoundException;
+import com.mytaxi.service.ICarDriverService;
+import com.mytaxi.service.IDriverService;
+
 /**
  * All operations with a driver will be routed by this controller.
  * <p/>
@@ -34,7 +42,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class DriverController
 {
     @Autowired
-    private DriverService driverService;
+    private IDriverService driverService;
+    
+    @Autowired
+    private ICarDriverService driverCarService;
 
 
     @GetMapping("/{driverId}")
@@ -54,14 +65,14 @@ public class DriverController
 
 
     @DeleteMapping("/{driverId}")
-    public void deleteDriver(@Valid @PathVariable long driverId) throws EntityNotFoundException
+    public void deleteDriver(@Valid @PathVariable long driverId) throws EntityNotFoundException,DriverMappedToACarException
     {
         driverService.delete(driverId);
     }
 
 
     @PutMapping("/{driverId}")
-    public void updateLocation(
+    public void updateDriverLocation(
         @Valid @PathVariable long driverId, @RequestParam double longitude, @RequestParam double latitude)
         throws ConstraintsViolationException, EntityNotFoundException
     {
@@ -70,45 +81,42 @@ public class DriverController
 
 
     @GetMapping
-    public List<DriverDTO> findDrivers(@RequestParam OnlineStatus onlineStatus)
+    public List<DriverDTO> findDriversByStatus(@RequestParam OnlineStatus onlineStatus)
         throws ConstraintsViolationException, EntityNotFoundException
     {
         return DriverMapper.makeDriverDTOList(driverService.find(onlineStatus));
     }
 
+    @PostMapping("/{driverId}")
+    public DriverDTO updateDriverStatus(@PathVariable long driverId,@RequestParam OnlineStatus onlineStatus)
+        throws ConstraintsViolationException, EntityNotFoundException,DriverMappedToACarException
+    {
+        return DriverMapper.makeDriverDTO(driverService.updateDriverStatus(driverId,onlineStatus));
+    }
 
-    @PostMapping("/select")
-    public DriverDTO selectCarByDriver(@RequestParam long driverId, @RequestParam long carId) throws EntityNotFoundException,
+
+    @PostMapping("/{driverId}/{carId}")
+    public CarDriverDTO mapDriverToCar(@PathVariable long driverId,@PathVariable long carId) throws EntityNotFoundException,
+            CarAlreadyInUseException ,DriverMappedToACarException
+    {
+        return driverCarService.selectCarByDriver(driverId,carId);
+    }
+
+
+    @DeleteMapping("/{driverId}/{carId}")
+    public CarDriverDTO removeDriverToCarMap(@PathVariable long driverId,@PathVariable long carId) throws EntityNotFoundException,
             CarAlreadyInUseException
     {
-        return driverService.selectCarByDriver(driverId, carId);
+    	return driverCarService.removeCarByDriver(driverId,carId);
     }
 
 
-    @DeleteMapping("/deselect")
-    @ResponseStatus(HttpStatus.OK)
-    public void removeCarByDriver(@RequestParam long driverId, @RequestParam long carId) throws EntityNotFoundException,
-            CarAlreadyInUseException
+    @GetMapping("/search/{searchValue}")
+    public List<DriverDTO> searchDrivers( @RequestParam SearchType searchType,@RequestParam SearchParameters searchParameter,
+    		@PathVariable String searchValue) throws NoResultFoundException ,InvalidSearchCriteria
     {
-        driverService.removeCarByDriver(driverId, carId);
+    	return driverService.findDriverBySearchAttributes(searchType,searchParameter,searchValue);
     }
 
 
-    @GetMapping("/car")
-    public List<DriverDTO> findDriverByCarAttributes(@Valid @RequestBody CarDTO carDTO)
-    {
-        return driverService.findDriverByCarAttributes(carDTO);
-    }
-
-  /*  @GetMapping("/car")
-    public List<DriverDTO> findDriverByCarAttributes(@RequestParam Map<String, String> params)
-    {
-        return driverService.findDriverByCarAttributes(getCarDataRequest(params));
-    }
-
-
-    private CarDTO getCarDataRequest(Map<String, String> params)
-    {
-        return
-    }*/
 }

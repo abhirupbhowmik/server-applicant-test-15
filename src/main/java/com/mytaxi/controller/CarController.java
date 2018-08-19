@@ -1,24 +1,29 @@
 package com.mytaxi.controller;
 
-import com.mytaxi.controller.mapper.CarMapper;
-import com.mytaxi.controller.mapper.DriverMapper;
-import com.mytaxi.datatransferobject.CarDTO;
-import com.mytaxi.datatransferobject.DriverDTO;
-import com.mytaxi.domainobject.CarDO;
-import com.mytaxi.domainobject.DriverDO;
-import com.mytaxi.domainvalue.OnlineStatus;
-import com.mytaxi.exception.ConstraintsViolationException;
-import com.mytaxi.exception.EntityNotFoundException;
-import com.mytaxi.service.car.CarService;
-import com.mytaxi.service.driver.DriverService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import javax.validation.Valid;
-import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mytaxi.controller.mapper.CarDriverMapper;
+import com.mytaxi.controller.mapper.CarMapper;
+import com.mytaxi.datatransferobject.CarDTO;
+import com.mytaxi.datatransferobject.CarDriverDTO;
+import com.mytaxi.exception.ConstraintsViolationException;
+import com.mytaxi.exception.DriverMappedToACarException;
+import com.mytaxi.exception.EntityNotFoundException;
+import com.mytaxi.service.ICarService;
 
 /**
  * All operations with a cars will be routed by this controller.
@@ -29,40 +34,39 @@ import java.util.List;
 public class CarController
 {
     @Autowired
-    private CarService carService;
+    private ICarService carService;
 
-    @RequestMapping(value = "/{carId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{carId}")
     public ResponseEntity<CarDTO> getCar(@Valid @PathVariable long carId) throws EntityNotFoundException
     {
         return new ResponseEntity<>(CarMapper.makeCarDTO(carService.findCarById(carId)), HttpStatus.OK);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<CarDTO>> getAllCars()
+    @GetMapping
+    public ResponseEntity<List<CarDriverDTO>> getAllCars()
     {
-        List<CarDTO> carDTOList =  CarMapper.makeCarDTOList(carService.findAllCars());
-        return new ResponseEntity<>(carDTOList, HttpStatus.OK);
+        List<CarDriverDTO> carDriverDTOList =  CarDriverMapper.makeCarDriverDTOList(carService.findAllCars());
+        return new ResponseEntity<>(carDriverDTOList, HttpStatus.OK);
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping
     public ResponseEntity<CarDTO> createCar(@Valid @RequestBody CarDTO carDTO) throws EntityNotFoundException, ConstraintsViolationException
     {
         return new ResponseEntity<>(CarMapper.makeCarDTO(carService.create(CarMapper.makeCarDO(carDTO))), HttpStatus.CREATED);
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<Void> updateCar(@Valid @RequestBody CarDTO carDTO) throws EntityNotFoundException
+    @PutMapping()
+    public ResponseEntity<CarDTO> updateCar(@Valid @RequestBody CarDTO carDTO) throws EntityNotFoundException
     {
-        carService.update(CarMapper.makeCarDO(carDTO));
-        return new ResponseEntity<>(HttpStatus.OK);
+    	 return new ResponseEntity<>(CarMapper.makeCarDTO(carService.update(CarMapper.makeCarDO(carDTO))), HttpStatus.CREATED);
     }
 
 
-    @RequestMapping(value = "/{carId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteCar(@Valid @PathVariable long carId) throws EntityNotFoundException
+    @DeleteMapping(value = "/{carId}")
+    public ResponseEntity<Void> deleteCar(@Valid @PathVariable long carId) throws EntityNotFoundException,DriverMappedToACarException
     {
         carService.delete(carId);
         return new ResponseEntity<>(HttpStatus.OK);
