@@ -15,14 +15,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class DriverMapperTest
 {
-    @Mock
     private DriverMapper driverMapper;
-
-    @BeforeClass
-    public static void setUp()
-    {
-        MockitoAnnotations.initMocks(DriverMapper.class);
-    }
 
     @Test
     public void driverDOShouldMapDriverDTO(){

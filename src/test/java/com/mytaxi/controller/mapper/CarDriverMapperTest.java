@@ -13,17 +13,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class CarDriverMapperTest {
 
-    @Mock
     private CarDriverMapper carDriverMapper;
-
-    @Mock
-    private DriverMapper driverMapper;
-
-    @BeforeClass
-    public static void setUp()
-    {
-        MockitoAnnotations.initMocks(CarDriverMapper.class);
-    }
 
     @Test
     public void carDOShouldMapCarDriverDTO(){
@@ -39,8 +29,8 @@ public class CarDriverMapperTest {
         assertThat(carDriverDTO.getCarDetails().getManufacturer()).isEqualTo(carDO.getManufacturer());
         assertThat(carDriverDTO.getCarDetails().getRating()).isEqualTo(carDO.getRating());
         assertThat(carDriverDTO.getDriverDetails().getId()).isEqualTo(carDO.getDriver().getId());
+        assertThat(carDriverDTO.getDriverDetails().getUsername()).isEqualTo(carDO.getDriver().getUsername());
+        assertThat(carDriverDTO.getDriverDetails().getPassword()).isEqualTo(carDO.getDriver().getPassword());
+        assertThat(carDriverDTO.getDriverDetails().getStatus()).isEqualTo(carDO.getDriver().getOnlineStatus());
     }
-
-
-
 }
