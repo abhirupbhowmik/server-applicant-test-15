@@ -1,26 +1,33 @@
 package com.mytaxi.domainobject;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.ZonedDateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.mytaxi.domainvalue.EngineType;
 
 @Entity
-@Table(name = "car")
+@Table(name = "car" ,
+		uniqueConstraints = @UniqueConstraint(name = "license_no", columnNames = {"license_no"})
+)
 public class CarDO
 {
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "car_id")
     private Long id;
 
     @Column(nullable = false, name = "total_seat")
     @NotNull(message = "Total Seat nos cannot be null")
-    private Integer totalSeat;
+    private String totalSeat;
 
-    @Column(name = "car_type")
-    private String carType;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name ="car_type")
+    private EngineType carType;
+    
     @Column(name = "purchase_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime purchaseDate = ZonedDateTime.now();
@@ -30,90 +37,102 @@ public class CarDO
     private String licenseNo;
 
     @Column(name = "rating")
-    private Float rating;
+    private String rating;
 
     @OneToOne
-    @JoinColumn(name="manufacturer")
-    private ManufacturerDO manufacturer;
+    @JoinColumn(nullable = true,name="driver_id")
+    private DriverDO driver;
+    
+   
+    @Column(name = "manufacturer")
+    private String manufacturer;
 
-    @Column(name = "deleted")
-    private Boolean deleted = false;
+   
 
-    public Long getId() {
-        return id;
-    }
+	
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public CarDO(@NotNull(message = "Total Seat nos cannot be null") String totalSeat, EngineType carType,
+			@NotNull(message = "License No cannot be null") String licenseNo, String rating,
+			String manufacturer,Long id) {
+		super();
+		this.id =id;
+		this.totalSeat = totalSeat;
+		this.carType = carType;
+		this.licenseNo = licenseNo;
+		this.rating = rating;
+		this.manufacturer = manufacturer;
+	}
 
-    public Integer getTotalSeat() {
-        return totalSeat;
-    }
+	public CarDO() {
+		
+	}
 
-    public void setTotalSeat(Integer totalSeat) {
-        this.totalSeat = totalSeat;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getCarType() {
-        return carType;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setCarType(String carType) {
-        this.carType = carType;
-    }
+	
 
-    public ZonedDateTime getPurchaseDate() {
-        return purchaseDate;
-    }
+	public String getTotalSeat() {
+		return totalSeat;
+	}
 
-    public void setPurchaseDate(ZonedDateTime purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
+	public void setTotalSeat(String totalSeat) {
+		this.totalSeat = totalSeat;
+	}
 
-    public String getLicenseNo() {
-        return licenseNo;
-    }
+	public EngineType getCarType() {
+		return carType;
+	}
 
-    public void setLicenseNo(String licenseNo) {
-        this.licenseNo = licenseNo;
-    }
+	public void setCarType(EngineType carType) {
+		this.carType = carType;
+	}
 
-    public Float getRating() {
-        return rating;
-    }
+	public ZonedDateTime getPurchaseDate() {
+		return purchaseDate;
+	}
 
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
+	public void setPurchaseDate(ZonedDateTime purchaseDate) {
+		this.purchaseDate = purchaseDate;
+	}
 
-    public ManufacturerDO getManufacturer() {
-        return manufacturer;
-    }
+	public String getLicenseNo() {
+		return licenseNo;
+	}
 
-    public void setManufacturer(ManufacturerDO manufacturer) {
-        this.manufacturer = manufacturer;
-    }
+	public void setLicenseNo(String licenseNo) {
+		this.licenseNo = licenseNo;
+	}
 
-    public Boolean getDeleted() {
-        return deleted;
-    }
+	public String getRating() {
+		return rating;
+	}
 
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
 
-    private CarDO ()
-    {
-    }
+	public DriverDO getDriver() {
+		return driver;
+	}
 
-    public CarDO(Integer totalSeat, String carType, String licenseNo, Float rating, ManufacturerDO manufacturer) {
-        this.totalSeat = totalSeat;
-        this.carType = carType;
-        this.purchaseDate = purchaseDate;
-        this.licenseNo = licenseNo;
-        this.rating = rating;
-        this.manufacturer = manufacturer;
-        this.deleted = false;
-    }
+	public void setDriver(DriverDO driver) {
+		this.driver = driver;
+	}
+
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+
+  
 }

@@ -1,19 +1,23 @@
 package com.mytaxi.domainobject;
 
-import com.mytaxi.domainvalue.GeoCoordinate;
-import com.mytaxi.domainvalue.OnlineStatus;
 import java.time.ZonedDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.mytaxi.domainvalue.GeoCoordinate;
+import com.mytaxi.domainvalue.OnlineStatus;
 
 @Entity
 @Table(
@@ -24,7 +28,8 @@ public class DriverDO
 {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "driver_id")
     private Long id;
 
     @Column(nullable = false)
@@ -39,9 +44,7 @@ public class DriverDO
     @NotNull(message = "Password can not be null!")
     private String password;
 
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
+    
     @Embedded
     private GeoCoordinate coordinate;
 
@@ -54,23 +57,26 @@ public class DriverDO
     private OnlineStatus onlineStatus;
 
 
-    private DriverDO()
+    public DriverDO()
     {
     }
 
+    public DriverDO(Long id, @NotNull(message = "Username can not be null!") String username,
+			@NotNull(message = "Password can not be null!") String password, OnlineStatus onlineStatus) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.onlineStatus = onlineStatus;
+		this.coordinate = null;
+	    this.dateCoordinateUpdated = null;
+	}
 
-    public DriverDO(String username, String password)
-    {
-        this.username = username;
-        this.password = password;
-        this.deleted = false;
-        this.coordinate = null;
-        this.dateCoordinateUpdated = null;
-        this.onlineStatus = OnlineStatus.OFFLINE;
-    }
 
 
-    public Long getId()
+
+
+	public Long getId()
     {
         return id;
     }
@@ -94,15 +100,23 @@ public class DriverDO
     }
 
 
-    public Boolean getDeleted()
-    {
-        return deleted;
+    public void setDateCreated(ZonedDateTime dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
 
-    public void setDeleted(Boolean deleted)
-    {
-        this.deleted = deleted;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    public void setDateCoordinateUpdated(ZonedDateTime dateCoordinateUpdated) {
+        this.dateCoordinateUpdated = dateCoordinateUpdated;
     }
 
 

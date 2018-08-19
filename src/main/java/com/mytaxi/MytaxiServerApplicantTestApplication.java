@@ -1,11 +1,13 @@
 package com.mytaxi;
 
-import com.mytaxi.util.LoggingInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.mytaxi.util.LoggingInterceptor;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -15,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @SpringBootApplication
-public class MytaxiServerApplicantTestApplication extends WebMvcConfigurerAdapter
+public class MytaxiServerApplicantTestApplication implements WebMvcConfigurer 
 {
 
     public static void main(String[] args)
@@ -43,9 +45,11 @@ public class MytaxiServerApplicantTestApplication extends WebMvcConfigurerAdapte
     }
 
 
-    private ApiInfo generateApiInfo()
+    @SuppressWarnings("deprecation")
+	private ApiInfo generateApiInfo()
     {
-        return new ApiInfo("mytaxi Server Applicant Test Service", "This service is to check the technology knowledge of a server applicant for mytaxi.", "Version 1.0 - mw",
-            "urn:tos", "career@mytaxi.com", "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0");
+    	return new ApiInfo("mytaxi Server Applicant Test Service", "This service is to check the technology knowledge of a server applicant for mytaxi.", "Version 1.0 - mw",
+        "urn:tos", "career@mytaxi.com", "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0");
+    	
     }
 }
