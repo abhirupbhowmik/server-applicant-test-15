@@ -3,10 +3,7 @@ package com.mytaxi.controller.mapper;
 import com.mytaxi.TestData;
 import com.mytaxi.datatransferobject.CarDriverDTO;
 import com.mytaxi.domainobject.CarDO;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
