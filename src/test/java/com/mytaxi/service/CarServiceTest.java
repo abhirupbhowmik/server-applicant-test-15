@@ -28,8 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CarServiceImplTest
-{
+public class CarServiceTest {
 
     @Mock
     private CarRepository carRepository;
@@ -42,15 +41,13 @@ public class CarServiceImplTest
 
 
     @BeforeClass
-    public static void setUp()
-    {
+    public static void setUp() {
         MockitoAnnotations.initMocks(ICarService.class);
     }
 
 
     @Test
-    public void testFindCarById() throws EntityNotFoundException
-    {
+    public void testFindCarById() throws EntityNotFoundException {
         CarDO carDO = TestData.createCarDO();
         when(carRepository.findById(carDO.getId())).thenReturn(Optional.ofNullable(carDO));
         carRepository.save(carDO);
@@ -62,8 +59,7 @@ public class CarServiceImplTest
 
 
     @Test
-    public void testFindAllCars()
-    {
+    public void testFindAllCars() {
         List<CarDO> listOfCarDO = TestData.createCarDOList();
         when(carRepository.findAll()).thenReturn(listOfCarDO);
         listOfCarDO.forEach((car) -> carRepository.save(car));
@@ -74,8 +70,7 @@ public class CarServiceImplTest
 
 
     @Test
-    public void testCreateCar() throws EntityNotFoundException, ConstraintsViolationException
-    {
+    public void testCreateCar() throws EntityNotFoundException, ConstraintsViolationException {
         CarDO carDO = TestData.createCarDO();
         DriverDO driverDO = carDO.getDriver();
         when(carRepository.save(carDO)).thenReturn(carDO);
@@ -88,8 +83,7 @@ public class CarServiceImplTest
 
 
     @Test
-    public void testUpdateCar() throws EntityNotFoundException, ConstraintsViolationException
-    {
+    public void testUpdateCar() throws EntityNotFoundException, ConstraintsViolationException {
         CarDO carDO = TestData.createCarDO();
         DriverDO driverDO = carDO.getDriver();
         when(carRepository.save(carDO)).thenReturn(carDO);
@@ -102,16 +96,16 @@ public class CarServiceImplTest
         verify(carRepository, times(2)).save(carDO);
     }
 
-    @Test(expected=DriverMappedToACarException.class)
-    public void shouldNoteDeleteCarwhenDriverisMapped() throws EntityNotFoundException,DriverMappedToACarException {
-        CarDO carDO =  TestData.createCarDO();
+    @Test(expected = DriverMappedToACarException.class)
+    public void shouldNotDeleteCarWhenDriverIsMapped() throws EntityNotFoundException, DriverMappedToACarException {
+        CarDO carDO = TestData.createCarDO();
         given(carRepository.findById(carDO.getId())).willReturn(Optional.ofNullable(carDO));
         carService.delete(carDO.getId());
         verify(carRepository, Mockito.only()).findById(carDO.getId());
     }
 
     @Test
-    public void shouldDeleteCar() throws EntityNotFoundException,DriverMappedToACarException {
+    public void shouldDeleteCar() throws EntityNotFoundException, DriverMappedToACarException {
         CarDO car_1 = TestData.createCarDOWithoutDriver();
         CarDO car_2 = TestData.createCarDOWithoutDriver();
         CarDO car_3 = TestData.createCarDOWithoutDriver();

@@ -1,13 +1,13 @@
 package com.mytaxi.domainvalue;
 
 public enum SearchParameters {
-	car_manufacturer("car"),
-	car_rating("car"),
-	car_licenseNo("car"),
-	car_carType("car"),
-	car_totalSeat("car"),
-	driver_onlineStatus("driver"),
-	driver_username("driver");
+	CAR_MANUFACTURER("car"),
+	CAR_RATING("car"),
+	CAR_LICENSENO("car"),
+	CAR_CARTYPE("car"),
+	CAR_TOTALSEAT("car"),
+	DRIVER_ONLINESTATUS("driver"),
+	DRIVER_USERNAME("driver");
 	
 	  private final String searchParameterCode;
       private SearchParameters(String  searchParameterCode) {
