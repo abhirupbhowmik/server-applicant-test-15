@@ -1,7 +1,3 @@
-# mytaxi backend applicant test
-
-## Task Description
-You should be able to start the example application by executing com.mytaxi.MytaxiServerApplicantTestApplication, which starts a webserver on port 8080 (http://localhost:8080) and serves SwaggerUI where can inspect and try existing endpoints.
 
 The project is based on a small web service which uses the following technologies:
 
@@ -9,64 +5,80 @@ The project is based on a small web service which uses the following technologie
 * Spring MVC with Spring Boot
 * Database H2 (In-Memory)
 * Maven
-* Intellij as IDE is preferred but not mandatory. We do provide code formatter for intellij and eclipse in the etc folder.
 
+    Conventions used are :
 
-You should be aware of the following conventions while you are working on this exercise:
-
- * All new entities should have an ID with type of Long and a date_created with type of ZonedDateTime.
+ * All new entities have an ID with type of Long and a date_created with type of ZonedDateTime.
  * The architecture of the web service is built with the following components:
- 	* DataTransferObjects: Objects which are used for outside communication via the API
+   * DataTransferObjects: Objects which are used for outside communication via the API
    * Controller: Implements the processing logic of the web service, parsing of parameters and validation of in- and outputs.
    * Service: Implements the business logic and handles the access to the DataAccessObjects.
    * DataAccessObjects: Interface for the database. Inserts, updates, deletes and reads objects from the database.
    * DomainObjects: Functional Objects which might be persisted in the database.
  * TestDrivenDevelopment is a good choice, but it's up to you how you are testing your code.
 
-You should commit into your local git repository and include the commit history into the final result.
-
----
-
-
 ## Task 1
- * Write a new Controller for maintaining cars (CRUD).
-   * Decide on your own how the methods should look like.
-   * Entity Car: Should have at least the following characteristics: license_plate, seat_count, convertible, rating, engine_type (electric, gas, ...)
-   * Entity Manufacturer: Decide on your own if you will use a new table or just a string column in the car table.
- * Extend the DriverController to enable drivers to select a car they are driving with.
- * Extend the DriverController to enable drivers to deselect a car.
- * Extend the DriverDo to map the selected car to the driver.
- * Add example data to resources/data.sql
+### Car Controller
+   * CRUD opertions on entity Car.
 
----
+### Driver Controller
+ * CRUD opertions on entity Driver.
+ * Drivers can be mapped to a car.
+ * Drivers can be removed from a car.
 
+ ```
+ Endpoints :
+ mapDriverToCar => POST -> /v1/drivers/{driverId}/{carId}
+ Parameters - driverId, carId
+ Exception class : CarAlreadyInUseException ,DriverMappedToACarException, EntityNotFoundException
+
+ removeDriverToCarMap => DELETE -> /v1/drivers/{driverId}/{carId}
+ Parameters - driverId, carId
+ Exception class : CarAlreadyInUseException , EntityNotFoundException
+
+ findDriversByStatus => GET -> /v1/drivers/
+ Parameters - onlineStatus
+
+ updateDriverLocation => PUT -> /{driverId}
+ Parameters - driverId, longitude, latitude
+
+ updateDriverStatus =>  POST /{driverId}
+ Parameters - driverId, onlineStatus
+
+ ```
 
 ## Task 2
-First come first serve: A car can be selected by exactly one ONLINE Driver. If a second driver tries to select a already used car you should throw a CarAlreadyInUseException.
-
----
-
+First come first serve: A car can be selected by exactly one ONLINE Driver.
+Ans: If a second driver tries to select a already used car through DriverController.mapDriverToCaryou it throws a CarAlreadyInUseException.
 
 ## Task 3
-Imagine a driver management frontend that is used internally by mytaxi employees to create and edit driver related data. For a new search functionality, we need an endpoint to search for drivers. It should be possible to search for drivers by their attributes (username, online_status) as well as car characteristics (license plate, rating, etc).
+Making use of the filter pattern to implement an endpoint in the DriverController to get a list of drivers with specific characteristics.
+Ans: Used filter pattern and implemented an endpoint in the DriverController to get a list of drivers with specific search criteria.
+ ```
+ Endpoints :
+ searchDrivers => GET -> /v1/drivers/search/{searchValue}
+ Parameters - searchType, searchParameter, searchValue
 
-* implement a new endpoint for searching or extend an existing one
-* driver/car attributes as input parameters
-* return list of drivers
+ searchType is an ENUM having values => Should be either SearchType.CAR or SearchType.DRIVER.
+ searchParameter is an ENUM having values => Should be either of the following : SearchParameters.CAR_MANUFACTURER, SearchParameters.CAR_RATING, SearchParameters.CAR_LICENSENO, SearchParameters.CAR_CARTYPE, SearchParameters.CAR_TOTALSEAT, SearchParameters.DRIVER_ONLINESTATUS, SearchParameters.DRIVER_USERNAME
+ searchValue can be any valid searchValue present with respect to searchParameter selected.
+ Exmple : searchType = CAR, searchParameter = SearchParameters.CAR_CARTYPE, searchValue = ELECTRIC
+ Exception class : NoResultFoundException, InvalidSearchCriteria
 
----
+ ```
+## Securing the API
+Security: secure the API. It's up to you how you are going to implement the security.
+ ```
+ It is not implemented. Currently in my office project we are using JWT token to implement security.
 
+ ```
 
-## Task 4 (optional)
-This task is _voluntarily_, if you can't get enough of hacking tech challenges, implement security.
-Secure the API so that authentication is needed to access it. The details are up to you.
+## Run unit tests :
+```
+./mvnw clean verify
+```
 
----
-
-
-Good luck!
-❤️ mytaxi
-
-
-
-_NOTE: Please make sure to not submit any personal data with your tests result. Personal data is for example your name, your birth date, email address etc._
+## Run the application :
+```
+./mvnw spring-boot:run
+```
