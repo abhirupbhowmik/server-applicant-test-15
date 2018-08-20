@@ -56,7 +56,7 @@ Making use of the filter pattern to implement an endpoint in the DriverControlle
 Ans: Used filter pattern and implemented an endpoint in the DriverController to get a list of drivers with specific search criteria.
  ```
  Endpoints :
- searchDrivers => GET -> /v1/drivers/search/{searchValue}
+ searchDrivers => GET -> /v1/drivers/{searchType}/{searchParameter}/{searchValue}
  Parameters - searchType, searchParameter, searchValue
 
  searchType is an ENUM having values => Should be either SearchType.CAR or SearchType.DRIVER.
@@ -69,7 +69,7 @@ Ans: Used filter pattern and implemented an endpoint in the DriverController to 
 ## Securing the API
 Security: secure the API. It's up to you how you are going to implement the security.
  ```
- It is not implemented. Currently in my office project we are using JWT token to implement security.
+ It is not implemented. Currently in my office project we are using JWT token to implement security.I have basic idea about the working of the Authentication.
 
  ```
 

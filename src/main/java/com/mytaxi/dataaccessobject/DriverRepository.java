@@ -20,7 +20,7 @@ public interface DriverRepository extends CrudRepository<DriverDO, Long>
     List<DriverDO> findByOnlineStatus(OnlineStatus onlineStatus);
     
     		   
-    @Query(nativeQuery = true, value="SELECT D.* FROM  driver D,car C WHERE D.driver_id = C.driver_id AND (C.rating = :#{#searchValue.rating}  OR C.car_type = :#{#searchValue.carType} OR C.license_no LIKE :#{#searchValue.licenseNo}  OR C.total_seat = :#{#searchValue.totalSeat}  OR C.manufacturer LIKE :#{#searchValue.manufacturer} OR D.online_status = :#{#searchValue.onlineStatus} OR D.username LIKE :#{#searchValue.username} )"
+    @Query(nativeQuery = true, value="SELECT D.* FROM  driver D,car C WHERE D.driver_id = C.driver_id AND (C.rating = :#{#searchValue.rating}  OR C.car_type = :#{#searchValue.carType} OR C.license_no = :#{#searchValue.licenseNo}  OR C.total_seat = :#{#searchValue.totalSeat}  OR C.manufacturer = :#{#searchValue.manufacturer} OR D.online_status = :#{#searchValue.onlineStatus} OR D.username = :#{#searchValue.username} )"
     )
     List<DriverDO> searchDrivers(@Param("searchValue")  SearchDTO searchValue);
   
